@@ -520,8 +520,8 @@ class DrawService:
 
         logging.info('Rendering Process Finished')
 
-        # logging.info('Display Image')
-        # self.main_image.show()
+        logging.info('Display Image')
+        self.main_image.show()
 
         buffered = BytesIO()
         self.main_image.save(buffered, format="png")

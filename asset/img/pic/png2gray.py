@@ -1,5 +1,6 @@
-from PIL import Image, ImageOps
 import os
+
+from PIL import Image, ImageOps
 
 
 def convert_and_save_png_to_grayscale(input_file_path, output_directory):

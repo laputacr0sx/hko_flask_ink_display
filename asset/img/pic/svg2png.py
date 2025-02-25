@@ -1,7 +1,8 @@
-import cairosvg
-from PIL import Image, ImageOps
 import io
 import os
+
+import cairosvg
+from PIL import Image, ImageOps
 
 
 def svg_to_png_1bit(svg_file_path, png_file_path, scale=1):

@@ -1,7 +1,8 @@
-import cairosvg
-from PIL import Image, ImageOps
 import io
 import os
+
+import cairosvg
+from PIL import Image, ImageOps
 
 
 def svg_to_bmp(svg_file_path, bmp_file_path, scale=1):
