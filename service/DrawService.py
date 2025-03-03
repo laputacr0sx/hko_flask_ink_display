@@ -32,7 +32,7 @@ class DrawService:
         self.EPD_HEIGHT = 480
         self.EPD_WIDTH = 800
         # self.main_image = Image.new('1', (800, 480), 255)
-        self.main_image = Image.new('RGB', (800, 480), "#FFF")
+        self.main_image = Image.new('RGB', (800, 480), "#000")
         self.draw = ImageDraw.Draw(self.main_image)
 
     def iterate_all_pic_dir_img(self, img: Image.Image, draw: ImageDraw.ImageDraw, directory_path):
@@ -100,8 +100,8 @@ class DrawService:
                 + 2
         )
 
-        self.draw.text((location_x_position, 2), location, font=font48, fill=0)
-        self.draw.text((date_x_position, 54), now, font=font32, fill=0)
+        self.draw.text((location_x_position, 2), location, font=font48, fill="#FFF")
+        self.draw.text((date_x_position, 54), now, font=font32, fill="#FFF")
 
         gregorian_date = (
             f'{gregorian.lunar_year[:3]}{gregorian.lunar_date}[{gregorian.lunar_year[4:5]}]'
@@ -111,7 +111,7 @@ class DrawService:
                 (greg_date_length - 2) * 18 + 2 * 9 + (greg_date_length - 1) * 2 + 2
         )
 
-        self.draw.text((greg_x_position, 92), gregorian_date, font=font18, fill=0)
+        self.draw.text((greg_x_position, 92), gregorian_date, font=font18, fill="#FFF")
 
     def major_weather(self, weather, humidity):
         # Render weather icon
@@ -119,15 +119,6 @@ class DrawService:
         icon_pos = (20, 0)
         icon_size = (220, 220)
         resized_icon = icon.resize(icon_size)
-        # draw.rectangle(
-        #     (
-        #         icon_pos[0] - 1,
-        #         icon_pos[1] - 1,
-        #         1 + icon_pos[0] + icon_size[0],
-        #         1 + icon_pos[1] + icon_size[1],
-        #     ),
-        #     fill=0,
-        # )
         self.main_image.paste(resized_icon, icon_pos)
         temperature_boundingbox = self.draw.textbbox(
             (278, 2),
@@ -162,13 +153,13 @@ class DrawService:
 
         # Render temperature
         self.draw.text(
-            (278, 2), f'{weather.temperature.data[0].value:.00f}', font=font64, fill=0
+            (278, 2), f'{weather.temperature.data[0].value:.00f}', font=font64, fill="#FFF"
         )
-        self.draw.text((temperature_boundingbox[2] + 2, 14), 'o', font=font18, fill=0)
-        self.draw.text((temperature_boundingbox[2] + 10, 17), 'C', font=font48, fill=0)
+        self.draw.text((temperature_boundingbox[2] + 2, 14), 'o', font=font18, fill="#FFF")
+        self.draw.text((temperature_boundingbox[2] + 10, 17), 'C', font=font48, fill="#FFF")
         # Render humidity
-        self.draw.text((278, 68), f'{humidity.humidity}', font=font48, fill=0)
-        self.draw.text((humidity_bb[2], 82), '%', font=font32, fill=0)
+        self.draw.text((278, 68), f'{humidity.humidity}', font=font48, fill="#FFF")
+        self.draw.text((humidity_bb[2], 82), '%', font=font32, fill="#FFF")
 
     def in_house_weather(self, env: EnvironmentModel):
         top_left = (self.EPD_WIDTH - 388, 4)
@@ -190,10 +181,11 @@ class DrawService:
         self.draw.polygon(
             ([house_tip, left_wall, left_ground, right_ground, right_wall]),
             "#FFF",
-            0,
+            "#FFF",
             4,
         )
-        self.draw.line((left_wall, right_wall), 0, 4)
+        self.draw.line((left_wall, right_wall), "#FFF", 4)
+        # Drawing window frame
         self.draw.rectangle(
             (
                 (house_tip[0] - 10, house_tip[1] + 20),
@@ -203,6 +195,7 @@ class DrawService:
             0,
             3,
         )
+        # Drawing window cross
         self.draw.line(
             ((house_tip[0], house_tip[1] + 20), (house_tip[0], house_tip[1] + 40)), 0, 2
         )
@@ -220,7 +213,7 @@ class DrawService:
         chimney_top_right = (chimney_bottom_left[0] + 14, chimney_bottom_left[1] - 19)
         self.draw.line(
             (chimney_bottom_left, (chimney_bottom_left[0], chimney_bottom_left[1] - 19)),
-            0,
+            "#FFF",
             3,
         )
         self.draw.line(
@@ -230,7 +223,7 @@ class DrawService:
                     chimney_top_right,
                 )
             ),
-            0,
+            "#FFF",
             3,
         )
         self.draw.line(
@@ -238,7 +231,7 @@ class DrawService:
                 chimney_top_right,
                 (chimney_top_right[0], chimney_bottom_left[1] + 12),
             ),
-            0,
+            "#FFF",
             3,
         )
         self.draw.arc(
@@ -248,7 +241,7 @@ class DrawService:
             ),
             150,
             30,
-            0,
+            "#FFF",
             2,
         )
         self.draw.arc(
@@ -258,7 +251,7 @@ class DrawService:
             ),
             start=150,
             end=30,
-            fill=0,
+            fill="#FFF",
             width=2,
         )
         # draw.arc([55, -10, 85, 10], start=30, end=150, fill=0, width=2)
@@ -348,16 +341,16 @@ class DrawService:
             # draw.rectangle((x1, y1, x2, y2), outline=0, width=1)
 
             # Draw weekday text , ie 一， 二，三...
-            draw.text((x1 + 44, y1 + 2), f'{curr_cast.week[2]}', font=font24, fill=0)
+            draw.text((x1 + 44, y1 + 2), f'{curr_cast.week[2]}', font=font24, fill="#FFF")
 
             # Draw TEMPERATURE text
-            draw.text((x1 + 70, y1 + 28), f'{htemp:.0f}', font=font24, fill=0)
-            draw.text((x1 + 70, y1 + 54), f'{ltemp:.0f}', font=font24, fill=0)
+            draw.text((x1 + 70, y1 + 28), f'{htemp:.0f}', font=font24, fill="#D74040")
+            draw.text((x1 + 70, y1 + 54), f'{ltemp:.0f}', font=font24, fill="#2B80BE")
 
             # Draw HUMIDITY text
-            draw.text((x1 + icon_offset[0], y1 + 78), f'{lhum:.0f}', font=font12, fill=0)
+            draw.text((x1 + icon_offset[0], y1 + 78), f'{lhum:.0f}', font=font12, fill='#FFF')
             draw.text(
-                (x1 + icon_offset[0] + 30, y1 + 78), f'{hhum:.0f}', font=font12, fill=0
+                (x1 + icon_offset[0] + 30, y1 + 78), f'{hhum:.0f}', font=font12, fill="#FFF"
             )
 
     def get_record_time_diff(self, curr: datetime, record_time: datetime):
@@ -454,13 +447,13 @@ class DrawService:
 
                 data_length = len(data) if type(data) is str else len(str(abs(data)))
 
-                draw.text((x1 + 48, y1), f'{name}', font=font12, fill=0)
-                draw.text((x1 + 48, y1 + 16), f'{data}', font=font32, fill=0)
+                draw.text((x1 + 48, y1), f'{name}', font=font12, fill="#FFF")
+                draw.text((x1 + 48, y1 + 16), f'{data}', font=font32, fill="#FFF")
                 draw.text(
                     (x1 + 48 + data_length * 14 + 4, y1 + cell_height - 30),
                     unit,
                     font=font14,
-                    fill=0,
+                    fill="#FFF",
                 )
 
                 icon = Image.open(os.path.join(PIC_DIR, icon))
@@ -468,9 +461,9 @@ class DrawService:
                 image.paste(resized_icon, (x1, y1 + 8))
 
     def render_footer_section(self, draw, time_diff, now):
-        draw.text((390, 464), f"資料更新於: {time_diff:.0f} 分鐘前", font=font12, fill=0)
+        draw.text((390, 464), f"資料更新於: {time_diff:.0f} 分鐘前", font=font12, fill="#8C8C8C")
         draw.text(
-            (620, 464), f"渲染於:{now.strftime("%Y-%m-%d %H:%M:%S")}", font=font12, fill=0
+            (620, 464), f"渲染於:{now.strftime("%Y-%m-%d %H:%M:%S")}", font=font12, fill="#8C8C8C"
         )
 
     def render_color_image(self):
@@ -478,7 +471,7 @@ class DrawService:
 
         logging.info('Reading from BME280')
         env = EnvironmentModel(temperature=27.9, humidity=63.4, pressure=1009.5)
-        logging.info('Enviroment Data GOT!')
+        logging.info('Environment Data GOT!')
 
         now: datetime = datetime.now()
         logging.info('Current Datetime GOT! ')
@@ -521,7 +514,7 @@ class DrawService:
         logging.info('Rendering Process Finished')
 
         logging.info('Display Image')
-        self.main_image.show()
+        # self.main_image.show()
 
         buffered = BytesIO()
         self.main_image.save(buffered, format="png")

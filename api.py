@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_restful import Api
 
 from controller.WeatherController import WeatherController
@@ -6,6 +7,7 @@ from service.DrawService import DrawService
 from service.HKOService import HKOService
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 
 draw_service = DrawService()

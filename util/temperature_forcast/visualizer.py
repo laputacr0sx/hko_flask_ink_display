@@ -56,7 +56,7 @@ class WeatherVisualizer:
             max_temp - h_offset,
             f'{max_temp}°C',
             fontsize=2,
-            color='black',
+            color='white',
             ha='center',
             va='bottom',
         )
@@ -65,7 +65,7 @@ class WeatherVisualizer:
             min_temp + h_offset,
             f'{min_temp}°C',
             fontsize=2,
-            color='black',
+            color='white',
             ha='center',
             va='top',
         )
