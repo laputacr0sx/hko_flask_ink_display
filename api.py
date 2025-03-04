@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
 
+from controller.AdminController import AdminController
 from controller.WeatherController import WeatherController
 from service.DrawService import DrawService
 from service.HKOService import HKOService
@@ -16,6 +17,10 @@ hko_service = HKOService()
 api.add_resource(WeatherController, '/weather', resource_class_kwargs={
     'draw_service': draw_service,
     'hko_service': hko_service
+})
+
+api.add_resource(AdminController, '/admin', resource_class_kwargs={
+    'draw_service': draw_service,
 })
 
 if __name__ == '__main__':

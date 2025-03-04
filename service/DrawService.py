@@ -31,7 +31,6 @@ class DrawService:
     def __init__(self):
         self.EPD_HEIGHT = 480
         self.EPD_WIDTH = 800
-        # self.main_image = Image.new('1', (800, 480), 255)
         self.main_image = Image.new('RGB', (800, 480), "#000")
         self.draw = ImageDraw.Draw(self.main_image)
 
@@ -47,7 +46,7 @@ class DrawService:
         idx = 0
         for y in range(rows):
             for x in range(cols):
-                if idx > len(png_files):
+                if idx >= len(png_files):
                     break
                 else:
                     png_file_path = os.path.join(directory_path, png_files[idx])
@@ -80,6 +79,7 @@ class DrawService:
         self.iterate_all_pic_dir_img(self.main_image, self.draw, 'asset/img/pic')
         logging.info("Display Image")
         buffered = BytesIO()
+        buffered.seek(0)
         self.main_image.save(buffered, format="png")
         encoded_img = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
@@ -115,12 +115,13 @@ class DrawService:
 
     def major_weather(self, weather, humidity):
         # Render weather icon
+
         icon = Image.open(os.path.join(PIC_DIR, f'{weather.icon[0]}.png'))
         icon_pos = (20, 0)
         icon_size = (220, 220)
         resized_icon = icon.resize(icon_size)
         self.main_image.paste(resized_icon, icon_pos)
-        temperature_boundingbox = self.draw.textbbox(
+        temperature_bounding_box = self.draw.textbbox(
             (278, 2),
             f'{weather.temperature.data[0].value}',
             font=font64,
@@ -134,7 +135,7 @@ class DrawService:
             embedded_color=False,
             font_size=None,
         )
-        humidity_bb = self.draw.textbbox(
+        humidity_bounding_box = self.draw.textbbox(
             (278, 68),
             f'{humidity.humidity}',
             font=font48,
@@ -149,24 +150,22 @@ class DrawService:
             font_size=None,
         )
 
-        # print(temperature_boundingbox)
-
         # Render temperature
         self.draw.text(
             (278, 2), f'{weather.temperature.data[0].value:.00f}', font=font64, fill="#FFF"
         )
-        self.draw.text((temperature_boundingbox[2] + 2, 14), 'o', font=font18, fill="#FFF")
-        self.draw.text((temperature_boundingbox[2] + 10, 17), 'C', font=font48, fill="#FFF")
+        self.draw.text((temperature_bounding_box[2] + 2, 14), 'o', font=font18, fill="#FFF")
+        self.draw.text((temperature_bounding_box[2] + 10, 17), 'C', font=font48, fill="#FFF")
         # Render humidity
         self.draw.text((278, 68), f'{humidity.humidity}', font=font48, fill="#FFF")
-        self.draw.text((humidity_bb[2], 82), '%', font=font32, fill="#FFF")
+        self.draw.text((humidity_bounding_box[2], 82), '%', font=font32, fill="#FFF")
 
     def in_house_weather(self, env: EnvironmentModel):
         top_left = (self.EPD_WIDTH - 388, 4)
         bottom_right = (self.EPD_WIDTH - 260, 130)
-        # draw.rectangle(
+        # self.draw.rectangle(
         #     (top_left, bottom_right),
-        #     255,
+        #     '#8e8e8e',
         #     0,
         #     2,
         # )
@@ -353,7 +352,8 @@ class DrawService:
                 (x1 + icon_offset[0] + 30, y1 + 78), f'{hhum:.0f}', font=font12, fill="#FFF"
             )
 
-    def get_record_time_diff(self, curr: datetime, record_time: datetime):
+    @staticmethod
+    def get_record_time_diff(curr: datetime, record_time: datetime) -> float:
         time_difference: timedelta = curr - record_time
         total_minutes: float = time_difference.total_seconds() // 60
 
@@ -466,6 +466,9 @@ class DrawService:
             (620, 464), f"渲染於:{now.strftime("%Y-%m-%d %H:%M:%S")}", font=font12, fill="#8C8C8C"
         )
 
+    def render_alerts_section(self, draw, alerts):
+        pass
+
     def render_color_image(self):
         logging.info('Gathering System Information')
 
@@ -491,6 +494,9 @@ class DrawService:
         sun = get_sun_status()
         logging.info('Sun Data GOT!')
 
+        period_forecast = ()
+        print(period_forecast)
+
         time_diff = self.get_record_time_diff(now, weather.temperature.record_time)
 
         humidity = get_humidity_data()
@@ -510,6 +516,7 @@ class DrawService:
         # self.render_rainfall_section(self.main_image)
         self.render_minor_dashboard(wind, uv, sun, self.draw, self.main_image)
         self.render_footer_section(self.draw, time_diff, now)
+        # self.render_alerts_section()
 
         logging.info('Rendering Process Finished')
 
@@ -517,6 +524,7 @@ class DrawService:
         # self.main_image.show()
 
         buffered = BytesIO()
+        buffered.seek(0)
         self.main_image.save(buffered, format="png")
         encoded_img = base64.b64encode(buffered.getvalue()).decode('utf-8')
 

@@ -18,10 +18,6 @@ class WeatherController(Resource):
         args = parser.parse_args()
         return EnvironmentDao(temperature=args['temperature'], humidity=args['humidity'], pressure=args['pressure'])
 
-    def get(self):
-        gg = self.draw_service.test_draw()
-
-        return gg
 
     def get(self):
         color_image = self.draw_service.render_color_image()

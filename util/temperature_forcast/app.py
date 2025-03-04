@@ -31,7 +31,6 @@ def get_temperature_plot():
         return base64.b64encode(buf.getvalue()).decode('utf-8')
 
 
-
     except Exception as e:
         print(f'An error occurred: {e}')
         return ''
