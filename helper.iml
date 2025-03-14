@@ -3,7 +3,9 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.idea/httpRequests" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/asset/img/out" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.12 (.venv)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

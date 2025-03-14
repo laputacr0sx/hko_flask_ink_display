@@ -40,7 +40,7 @@ class RainfallDatum:
     unit: FluffyUnit
     place: str
     max: int
-    main: Main
+    main: str
 
 
 @dataclass
@@ -88,7 +88,7 @@ def parse_current_weather(json_data: dict) -> CurrentWeather:
             unit=FluffyUnit(datum["unit"]),
             place=datum["place"],
             max=datum["max"],
-            main=Main(datum["main"] if datum["main"] else Main.EMPTY),
+            main=datum["main"],
         )
         for datum in json_data["rainfall"]["data"]
     ]
