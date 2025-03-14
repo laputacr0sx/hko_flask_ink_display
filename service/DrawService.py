@@ -417,7 +417,7 @@ class DrawService:
                     'name': '紫外線指數',
                     # "data": weather.uvindex.data[0].value,
                     'data': uv.uv_index,
-                    'unit': f"@{uv.datetime.strftime("%H:%M")}",
+                    'unit': f"@{uv.datetime.strftime('%H:%M')}",
                 },
                 {
                     'icon_uri': 'sunset.png',
