@@ -464,7 +464,7 @@ class DrawService:
     def render_footer_section(self, draw, time_diff, now):
         draw.text((390, 464), f"資料更新於: {time_diff:.0f} 分鐘前", font=font12, fill="#8C8C8C")
         draw.text(
-            (620, 464), f"渲染於:{now.strftime("%Y-%m-%d %H:%M:%S")}", font=font12, fill="#8C8C8C"
+            (620, 464), f"渲染於:{now.strftime('%Y-%m-%d %H:%M:%S')}", font=font12, fill="#8C8C8C"
         )
 
     def render_alerts_section(self, draw, alerts):
