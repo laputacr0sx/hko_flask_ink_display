@@ -11,13 +11,14 @@ from models.BMEModel import EnvironmentModel
 from models.CurrentWeather import get_current_weather, CurrentWeather
 from models.Gregorian import GregorianDate, get_gregorian_date
 from models.Humidity import HumidityData, get_humidity_data
+from models.PeriodWeatherForecast import get_period_weather_forecast, HourlyWeatherForecast
 from models.Sun import get_sun_status
 from models.UVIndex import get_uv_data
 from models.WeatherForecast import get_weather_forecast, WeatherForecastData
 from models.Wind import get_wind_data
 from service import PIC_DIR
 from util.draw_rainfall_plot import render_rainfall_chart
-from util.temperature_forcast import get_temperature_plot
+from util.draw_temperature_forecast import create_temperature_plot
 
 
 class DrawService:
@@ -383,11 +384,11 @@ class DrawService:
 
         return f'{month}月{day}日({weekday})'
 
-    def render_rainfall_section(self, image: Image.Image):
+    def render_rainfall_section(self, image: Image.Image, suitable_hourly_forecast: list[HourlyWeatherForecast]):
         rainfall_bytes = render_rainfall_chart()
 
         if rainfall_bytes is None:
-            temperature_bytes = get_temperature_plot()
+            temperature_bytes = create_temperature_plot(suitable_hourly_forecast)
             chart = Image.open(BytesIO(base64.b64decode(temperature_bytes)))
         else:
             chart = Image.open(BytesIO(base64.b64decode(rainfall_bytes)))
@@ -494,8 +495,9 @@ class DrawService:
         sun = get_sun_status()
         logging.info('Sun Data GOT!')
 
-        period_forecast = ()
-        print(period_forecast)
+        hourly_forecast = get_period_weather_forecast().hourly_weather_forecast
+        suitable_hourly_forecast = [forecast for forecast in hourly_forecast if
+                                    datetime.now() < forecast.forecast_hour < datetime.now() + timedelta(hours=9)]
 
         time_diff = self.get_record_time_diff(now, weather.temperature.record_time)
 
@@ -513,7 +515,7 @@ class DrawService:
             greg, weather, humidity, location, now_str, env
         )
         self.render_forecast_section(forecast, self.draw, self.main_image)
-        # self.render_rainfall_section(self.main_image)
+        self.render_rainfall_section(self.main_image, suitable_hourly_forecast)
         self.render_minor_dashboard(wind, uv, sun, self.draw, self.main_image)
         self.render_footer_section(self.draw, time_diff, now)
         # self.render_alerts_section()
