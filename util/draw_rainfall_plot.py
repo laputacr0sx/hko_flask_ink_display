@@ -119,10 +119,10 @@ def render_rainfall_chart():
     # plt.grid(True, color="gray", linestyle="--", linewidth=0.5)
 
     buf = io.BytesIO()
+    buf.seek(0)
     plt.savefig(buf, format='png', bbox_inches='tight')
     # plt.show()
     # plt.close()
-    # buf.seek(0)
 
     return base64.b64encode(buf.getvalue()).decode('utf-8')
 

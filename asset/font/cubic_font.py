@@ -1,8 +1,6 @@
-import os
-from io import BytesIO
-from PIL import ImageFont
 from pathlib import Path
 
+from PIL import ImageFont
 
 CUBIC_FONT_PATH = str(Path("asset/font/Cubic_11.ttf"))
 
