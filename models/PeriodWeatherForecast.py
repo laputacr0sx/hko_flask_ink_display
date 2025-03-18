@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+import time
 from typing import Optional, List
 
 import requests
@@ -37,7 +38,7 @@ class WeatherForcastData:
 
 def get_period_weather_forecast(current_time: datetime) -> WeatherForcastData:
     print("getting period weather forecast at " + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    params = {"v": current_time.strftime("%Y%m%d%H%M")}
+    params = {"v": current_time.strftime("%Y%m%d%H%M"), "t": int(time.time())}
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0",
         "Accept": "application/json, text/plain, */*",
@@ -49,6 +50,8 @@ def get_period_weather_forecast(current_time: datetime) -> WeatherForcastData:
         "Sec-Fetch-Dest": "empty",
         "Sec-Fetch-Mode": "cors",
         "Sec-Fetch-Site": "same-origin",
+        "Cache-Control": "no-cache",  # Add this to prevent caching
+        "Pragma": "no-cache",  # Add this for older browsers
     }
     forecast_url = "https://maps.weather.gov.hk/ocf/dat/SHA.xml"
     res = requests.get(forecast_url, params=params, headers=headers)
