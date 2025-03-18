@@ -34,6 +34,7 @@ class DrawService:
         self.EPD_WIDTH = 800
         self.main_image = Image.new('RGB', (800, 480), "#000")
         self.draw = ImageDraw.Draw(self.main_image)
+        self.logger = logging.getLogger("draw_service")
 
     def iterate_all_pic_dir_img(self, img: Image.Image, draw: ImageDraw.ImageDraw, directory_path):
         cell_dimension = 80
@@ -497,7 +498,7 @@ class DrawService:
 
         hourly_forecast = get_period_weather_forecast().hourly_weather_forecast
         suitable_hourly_forecast = [forecast for forecast in hourly_forecast if
-                                    datetime.now() < forecast.forecast_hour < datetime.now() + timedelta(hours=9)]
+                                    datetime.now() < forecast.forecast_hour < datetime.now() + timedelta(hours=6)]
 
         time_diff = self.get_record_time_diff(now, weather.temperature.record_time)
 

@@ -21,21 +21,24 @@ def create_temperature_plot(suitable_hourly_forecast: list[HourlyWeatherForecast
     numeric_hours = date2num(hours)
 
     # Create the plot
-    fig, ax = plt.subplots(figsize=(3, 1.5))
+    fig, ax = plt.subplots(figsize=(1.7, 0.8))
+
+    font = {'family': 'Cubic 11', 'size': 4}
+    plt.rc('font', **font)
 
     # Set a dark background
     plt.style.use('dark_background')
 
     # Plot the temperature line
-    ax.plot(numeric_hours, temperatures, marker='o', linestyle='-', linewidth=1, markersize=2,
+    ax.plot(numeric_hours, temperatures, marker='o', linestyle='-', linewidth=1, markersize=1,
             color='#FFD700', markerfacecolor='#FF4500', markeredgecolor='white')
 
     # Customize the plot
-    ax.set_ylabel("°C", fontsize=12, fontweight='bold', color='white')
+    # ax.set_ylabel("°C", fontsize=12, fontweight='bold', color='white')
 
     # Format x-axis
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-    ax.xaxis.set_major_locator(mdates.HourLocator(interval=2))
+    ax.xaxis.set_major_locator(mdates.HourLocator(interval=1))
 
     # Customize ticks
     ax.tick_params(axis='both', colors='white', which='both')
@@ -50,8 +53,8 @@ def create_temperature_plot(suitable_hourly_forecast: list[HourlyWeatherForecast
     # Add value labels
     for i, temp in enumerate(temperatures):
         ax.annotate(f'{temp:.1f}°C', (numeric_hours[i], temp), textcoords="offset points",
-                    xytext=(0, 10), ha='center', va='bottom', fontsize=9, fontweight='bold',
-                    color='white', bbox=dict(facecolor='#1E90FF', edgecolor='none', alpha=0.7, pad=2))
+                    xytext=(0, 10), ha='center', va='bottom', fontsize=4,
+                    color='white', bbox=dict(facecolor='#1E90FF', edgecolor='none', pad=2))
 
     # Adjust layout
     plt.tight_layout()
@@ -66,4 +69,3 @@ def create_temperature_plot(suitable_hourly_forecast: list[HourlyWeatherForecast
 
     # Encode the image to base64
     return base64.b64encode(buf.getvalue()).decode('utf-8')
-
