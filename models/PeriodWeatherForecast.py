@@ -35,8 +35,9 @@ class WeatherForcastData:
     hourly_weather_forecast: List[HourlyWeatherForecast]
 
 
-def get_period_weather_forecast() -> WeatherForcastData:
-    params = {"v": datetime.now().strftime("%Y%m%d%H%M")}
+def get_period_weather_forecast(current_time: datetime) -> WeatherForcastData:
+    print("getting period weather forecast at " + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    params = {"v": current_time.strftime("%Y%m%d%H%M")}
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0",
         "Accept": "application/json, text/plain, */*",
@@ -50,7 +51,10 @@ def get_period_weather_forecast() -> WeatherForcastData:
         "Sec-Fetch-Site": "same-origin",
     }
     forecast_url = "https://maps.weather.gov.hk/ocf/dat/SHA.xml"
-    current_json = requests.get(forecast_url, params=params, headers=headers).json()
+    res = requests.get(forecast_url, params=params, headers=headers)
+    res.raise_for_status()
+    current_json = res.json()
+    print("Period weather forecast got!")
 
     return WeatherForcastData(
         last_modified=datetime.strptime(str(current_json["LastModified"]), "%Y%m%d%H%M%S"),

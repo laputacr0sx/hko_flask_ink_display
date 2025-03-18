@@ -496,7 +496,8 @@ class DrawService:
         sun = get_sun_status()
         logging.info('Sun Data GOT!')
 
-        hourly_forecast = get_period_weather_forecast().hourly_weather_forecast
+        weather_info = get_period_weather_forecast(current_time=datetime.now())
+        hourly_forecast = weather_info.hourly_weather_forecast
         suitable_hourly_forecast = [forecast for forecast in hourly_forecast if
                                     datetime.now() < forecast.forecast_hour < datetime.now() + timedelta(hours=6)]
 
